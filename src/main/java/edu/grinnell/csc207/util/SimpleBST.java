@@ -1,10 +1,12 @@
 package edu.grinnell.csc207.util;
 
 import java.io.PrintWriter;
+import java.security.Key;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Stack;
 import java.util.function.BiConsumer;
+import org.w3c.dom.Node;
 
 /**
  * A simple implementation of binary search trees.
@@ -75,6 +77,31 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
   // +-------------------+
 
   /**
+   * 
+   * @param node
+   * @param key
+   * @param value
+   * @return
+   */
+  public BSTNode<K, V> insert(BSTNode<K, V> node, K key, V value) {
+    if (node == null) {
+      this.cachedValue = null;
+      this.size++;
+      return new BSTNode<K, V>(key, value);
+    } else if (order.compare(key, node.key) == 0) {
+      this.cachedValue = get(key);
+      node.value = value;
+      return node;
+    } else if (order.compare(key, node.key) < 0) {
+      node.left = insert(node.left, key, value);
+      return node;
+    } else {
+      node.right = insert(node.right, key, value);
+      return node;
+    }
+  }
+
+  /**
    * Set the value associated with key.
    *
    * @param key
@@ -89,7 +116,8 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
    */
   @Override
   public V set(K key, V value) {
-    return null;        // STUB
+    root = insert(root, key, value);
+    return this.cachedValue;
   } // set(K, V)
 
   /**
@@ -210,7 +238,7 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
    */
   @Override
   public void forEach(BiConsumer<? super K, ? super V> action) {
-    // STUB
+    // Got until here.
   } // forEach
 
   // +----------------------+----------------------------------------
